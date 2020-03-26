@@ -2,8 +2,8 @@
     <div>
         <!-- 导航 -->
         <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>文艺</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/home' }">主页</el-breadcrumb-item>
+            <el-breadcrumb-item v-model="queryInfo.id">{{ queryInfo.id }}</el-breadcrumb-item>
           </el-breadcrumb>
         <!-- 布局 -->
         <el-row >
@@ -15,16 +15,16 @@
             </el-col>
         </el-row>
         <!-- 卡片视图区 -->
-        <el-row :gutter="1" :span="10" v-for="(o, index) in 1" :key="o" :offset="index > 0 ? 2 : 0">
-            <el-col :span="5" v-for="book in booklist" :key="book.id" offset="1">
+        <el-row :span="10" v-for="(o, index) in 1" :key="o" :offset="index > 0 ? 2 : 0">
+            <el-col :span="5" v-for="book in booklist" :key="book.id" :offset="1" >
               <el-card :body-style="{ padding: '0px' }">
-                <!-- <div > -->
+                <!-- <div  v-for="book in booklist" :key="book.id"> -->
                   <img :src="getImageUrl(book.id)" class="image">
                   <div style="padding: 14px; text-align: center;">
                     <li @click="getBookUrl(book.id)">{{ book.title }}</li>
-                    <!-- <div class="bottom clearfix"> -->
-                    <!-- <el-button type="text" class="button">加入购物车</!-->
-                    <!-- </div> -->
+                    <!-- <div class="bottom clearfix">
+                    <el-button type="text" class="button">加入购物车</el-button>
+                    </div> -->
                   </div>
                 <!-- </div> -->
               </el-card>
@@ -34,13 +34,12 @@
 </template>
 
 <script>
-// import axios from 'axios'
 export default {
   data () {
     return {
       // 获取书籍列表的参数对象
       queryInfo: {
-        id: 1
+        id: ''
       },
       queryInfo2: {
         query: ''
@@ -53,15 +52,17 @@ export default {
     this.getBookList()
   },
   methods: {
+    // 根据路径中的id获取对应分类的书目
     async getBookList () {
-      const { data: res } = await this.$http.get('books/category', {
-        params: this.queryInfo
-      })
+      var CateId = this.$route.params.categoty_id
+      this.queryInfo.id = CateId
+      console.log(this.queryInfo.id)
+      const { data: res } = await this.$http.get('books/category', { params: this.queryInfo })
       if (res.meta.status !== 200) {
         return this.$message.error('获取失败')
       }
       this.booklist = res.data.books
-      console.log(res)
+      // console.log(res)
       for (var i = 0; i < res.data.length; i++) {
         var book = res.data.books[i]
         this.booklist.push(book)
@@ -77,7 +78,7 @@ export default {
       }
       this.total = res.data.total
       this.booklist = res.data.books
-      console.log(res)
+      // console.log(res)
     },
     // 跳转到书本详情页
     getBookUrl (id) {

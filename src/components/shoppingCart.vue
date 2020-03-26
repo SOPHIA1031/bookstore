@@ -49,8 +49,8 @@
     </el-table>
     <br>
     <el-row type="flex" class="row-bg" justify="space-between">
-      <el-col :span="10"><el-input placeholder="请输入收货地址" prefix-icon="el-icon-location" v-model="address"></el-input></el-col>
-      <el-col :span="6"><el-button type="primary" style="float:right" @click="buy">立刻购买</el-button></el-col>
+      <el-col :span="10"><el-input placeholder="请输入收货地址" prefix-icon="el-icon-location" v-model="orderlist.address"></el-input></el-col>
+      <el-col :span="6"><el-button type="primary" style="float:right" @click="buy">确认购买</el-button></el-col>
     </el-row>
     <el-button type="warning" plain class="btnTotal">{{"所选商品总价：" + moneyTotal}}</el-button>
     </div>
@@ -67,11 +67,20 @@ export default {
       queryInfo: {
         id: ''
       },
-      address: '', // 地址
+      // address: '', // 地址
       modifyInfo: {
         user_id: '',
         book_id: '',
         count: 1
+      },
+      orderlist: {
+        user_id: '',
+        books: [],
+        address: ''
+      },
+      buyInfo: {
+        user_id: '',
+        order_id: ''
       }
     }
   },
@@ -207,27 +216,25 @@ export default {
     // 购买选中商品
     async buy () {
       // 地址不能为空
-      if (this.address === '') return this.$message.error('地址不能为空')
+      if (this.orderlist.address === '') return this.$message.error('地址不能为空')
       // 购物车不能为空
       if (this.multipleSelection.length === 0) return this.$message.error('购物车不能为空')
-      var userid = window.sessionStorage.getItem('id')
+      this.orderlist.user_id = window.sessionStorage.getItem('id')
       var selections = this.multipleSelection // 选中的商品数组
-      var bookList = [] // 提交的书籍id列表
+      // var bookList = [] // 提交的书籍id列表
       for (var i = 0; i < selections.length; i++) {
-        bookList.push(selections[i].book_id)
+        this.orderlist.books[i] = selections[i].book_id
       }
-      var data = {
-        user_id: userid,
-        books: bookList,
-        address: this.address
-      }
-      console.log(data)
-      const { data: res } = await this.$http.post('orders/commit/', data)
+      // console.log(this.orderlist)
+      const { data: res } = await this.$http.post('orders/commit/', this.orderlist)
       if (res.meta.status === 200) {
         console.log(res)
+        this.buyInfo.user_id = this.orderlist.user_id
+        this.buyInfo.order_id = res.data.order_id
+        await this.$http.post('orders/purchase/', this.buyInfo)
         this.$router.push('/myOrder')
       } else {
-        this.$message.err('购买出错了！')
+        this.$message.err('订单出错了！')
         console.log(res)
       }
     }

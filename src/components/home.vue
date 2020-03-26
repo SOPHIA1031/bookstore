@@ -18,7 +18,7 @@
                 <div>
                       <li @click="getBookUrl(book.id)" >{{ book.title }} </li>
                       <span class="author">{{ book.author }} </span>
-                      <br><span class="price">{{ book.price}}</span>
+                      <br><span class="price">{{ book.price }}</span>
                 </div>
             </div>
         </div>
@@ -37,6 +37,7 @@ export default {
         { id: 4, picPath: require('../pic/carousel/4.png') }
       ],
       books: [],
+      bookCategory: [],
       queryInfo: {
         query: '' // 查询参数
       }
@@ -50,7 +51,6 @@ export default {
         this.$message.err('获取失败')
         return console.log(res)
       }
-      console.log(res)
       // 前4本书加入最近上新，显示在主页
       for (var i = 0; i < 4; i++) {
         var book = res.data.books[i]
@@ -66,9 +66,18 @@ export default {
       var url = '/book/' + id
       this.$router.push(url)
     }
+    // async getCate () {
+    //   const { data: res1 } = await this.$http.get('books/getcate')
+    //   if (res1.meta.stats !== 200) {
+    //     this.$message.error('获取失败')
+    //   }
+    //   this.bookCategory = res1.data
+    //   console.log(res1)
+    // }
   },
   created () {
     this.getBooks()
+    // this.getCate()
   }
 }
 </script>

@@ -7,6 +7,7 @@ import './assets/css/global.css'
 import axios from 'axios'
 
 Vue.prototype.$http = axios
+// 配置请求的根路径
 axios.defaults.baseURL = 'http://yrzhao.club:8000/api/bookstore/'
 
 Vue.config.productionTip = false

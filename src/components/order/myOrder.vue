@@ -114,6 +114,7 @@ export default {
       if (res.meta.status === 200) {
         this.tableData = res.data.books
         console.log(res)
+        // console.log(this.queryInfo.user_id)
       } else {
         this.$message.error('获取历史订单错误')
         // console.log(res)
