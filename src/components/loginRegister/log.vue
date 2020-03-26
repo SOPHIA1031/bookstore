@@ -26,7 +26,7 @@ export default {
     return {
       //    表示一个表单数据绑定对象
       loginForm: {
-        telephone: '123',
+        telephone: '12345',
         password: '123456'
       },
 
@@ -48,7 +48,7 @@ export default {
     async login () {
       const { data: res } = await this.$http.post('auth/login/', this.loginForm)
       if (res.meta.status !== 200) {
-        return this.$message.err('用户名或者密码错误')
+        return this.$message.error('用户名或者密码错误')
       }
       this.$message.success('登录成功')
       window.sessionStorage.setItem('username', res.data.username)
@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .formBox {
   width: 80%;
   position: absolute;

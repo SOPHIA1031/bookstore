@@ -35,13 +35,11 @@ export default {
       regRules: {
         //  验证用户名是否合法
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         //  验证密码
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         telephone: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
@@ -57,7 +55,7 @@ export default {
       if (res.meta.status === 200) {
         this.$message.success('注册成功,请登录！')
       } else {
-        this.$message.err('出现错误')
+        this.$message.error('出现错误')
         console.log(res)
       }
     }
@@ -73,5 +71,8 @@ export default {
 }
 .btns {
     float:right;
+}
+.el-form-item {
+  height: 35px;
 }
 </style>
