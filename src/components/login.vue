@@ -2,10 +2,10 @@
       <div class="loginContainer">
         <div class="loginBox">
           <!-- 标题 -->
-          <div class="text">
+          <!-- <div class="text">
             <p class="title">Bookstore</p>
             <p class="slogan">阅读是一种生活习惯</p>
-          </div>
+          </div> -->
           <!-- 标签页切换组件 -->
             <el-tabs type="card" v-model="currentView">
               <!-- 引入登录组件 -->

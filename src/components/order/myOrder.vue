@@ -1,5 +1,17 @@
 <template>
     <div class="main">
+      <el-header>
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :router="true" >
+            <el-menu-item index="1" route="Index" >主页</el-menu-item>
+            <el-menu-item index="2" route="Cart">购物车</el-menu-item>
+            <el-menu-item index="3" route="myOrder">我的订单</el-menu-item>
+            <el-menu-item index="4" route="myOrder">我的信息</el-menu-item>
+            <div class="infoText">
+                <span style="margin-right:10px">{{time}},{{username}}</span>
+                <el-button @click="logout" class="infoBtn">退出</el-button>
+            </div>
+        </el-menu>
+        </el-header>
         <div class="user">
             <p style="font-size:22px;font-weight:bold">收货人信息</p>
             <table>
@@ -31,7 +43,7 @@
             style="width: 100%"
             :row-class-name="tableRowClassName">
             <el-table-column
-            prop="name"
+            prop="title"
             label="书名"
             width="180">
             </el-table-column>
@@ -39,6 +51,11 @@
             prop="count"
             label="数量"
             width="180">
+            </el-table-column>
+            <el-table-column
+            prop="price"
+            label="价格"
+            >
             </el-table-column>
             <el-table-column
             prop="date"
@@ -51,7 +68,37 @@
 </template>
 <script>
 export default {
+  data () {
+    return {
+      activeIndex: '3',
+      tableData: [],
+      queryInfo: {
+        user_id: ''
+      },
+      user_id: ''
+    }
+  },
   methods: {
+    // 获取登录用户的id,保存
+    getInfo () {
+      var name = window.sessionStorage.getItem('username')
+      var id = window.sessionStorage.getItem('id')
+      this.username = name
+      this.userid = id
+    },
+    // 获取时间
+    getTime () {
+      var day = new Date()
+      var hour = day.getHours()
+      if (hour > 6 && hour < 12) this.time = '早上好'
+      else if (hour >= 12 && hour < 18) this.time = '下午好'
+      else this.time = '晚上好'
+    },
+    // 退出登录
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    },
     tableRowClassName ({ row, rowIndex }) {
       if (rowIndex === 1) {
         return 'warning-row'
@@ -59,35 +106,32 @@ export default {
         return 'success-row'
       }
       return ''
+    },
+    // 获取历史订单
+    async getHistory () {
+      this.queryInfo.user_id = window.sessionStorage.getItem('id')
+      const { data: res } = await this.$http.get('orders/history/', { params: this.queryInfo })
+      if (res.meta.status === 200) {
+        this.tableData = res.data.books
+        console.log(res)
+        // console.log(this.queryInfo.user_id)
+      } else {
+        this.$message.error('获取历史订单错误')
+        // console.log(res)
+      }
     }
   },
-  data () {
-    return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '计算机网络',
-        count: 1
-      }, {
-        date: '2016-05-04',
-        name: 'Javascript高级程序设计',
-        count: 1
-      }, {
-        date: '2016-05-01',
-        name: 'Javascript高级程序设计',
-        count: 1
-      }, {
-        date: '2016-05-03',
-        name: '计算机操作系统',
-        count: 1
-      }]
-    }
+  created () {
+    this.getHistory()
+    this.getInfo()
+    this.getTime()
   }
 }
 </script>
 
 <style scoped>
 .main {
-    width: 65%;
+    width: 70%;
     margin: auto;
 }
 table {

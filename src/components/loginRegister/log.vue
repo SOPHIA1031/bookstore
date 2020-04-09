@@ -1,8 +1,13 @@
 <template>
+    <div>
+      <div class="text">
+        <p class="title">Bookstore</p>
+        <p class="slogan">阅读是一种生活习惯</p>
+      </div>
     <!-- 登录表单 -->
     <el-form label-width="70px"  class="formBox"  :model="loginForm" :rules="loginRules" ref="loginFormRefs">
-        <el-form-item label="用户名"  prop="userName">
-            <el-input v-model="loginForm.userName"></el-input>
+        <el-form-item label="手机号"  prop="telephone">
+            <el-input v-model="loginForm.telephone"></el-input>
         </el-form-item>
         <el-form-item label="密码"  prop="password">
             <el-input v-model="loginForm.password" type="password"></el-input>
@@ -11,25 +16,25 @@
             <el-button type="primary" @click="login">登录</el-button>
         </el-form-item>
     </el-form>
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
       //    表示一个表单数据绑定对象
       loginForm: {
-        userName: 'admin',
-        password: 'sss123'
+        telephone: '123',
+        password: '123456'
       },
 
       //    表单的验证规则对象
       loginRules: {
         //  验证用户名是否合法
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+        telephone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         //  验证密码
         password: [
@@ -40,39 +45,28 @@ export default {
     }
   },
   methods: {
-    login () {
-      // this.$refs.loginFormRefs.validate(async valid => {
-      //   if (!valid) {
-      //     return
-      //   }
-      //   // 向服务器提交用户名和密码
-      //   const { data: res } = await this.$http.post('login', this.loginForm)
-      //   if (res.meta.status !== 200) {
-      //     alert('用户名或者密码错误！')
-      //     return this.$message.err('登录失败')
-      //   }
-      //   this.$message.success('登录成功')
-      //   window.sessionStorage.setItem('token', res.data.token)
-      //   this.$router.push('/index')
-      // })
-      axios.post('/api/login').then(response => {
-        if (response.data) {
-          // console.log(response.data)
-          // alert(response.data.status + ',' + response.data.code)
-          if (response.data.code !== 200) {
-            return this.$message.err('用户名或者密码错误')
-          }
-          this.$message.success('登录成功')
-          window.sessionStorage.setItem('username', response.data.username)
-          window.sessionStorage.setItem('id', response.data.id)
-          this.$router.push('/index')
-        }
-      })
+    async login () {
+      const { data: res } = await this.$http.post('auth/login/', this.loginForm)
+      if (res.meta.status !== 200) {
+        return this.$message.err('用户名或者密码错误')
+      }
+      this.$message.success('登录成功')
+      window.sessionStorage.setItem('username', res.data.username)
+      window.sessionStorage.setItem('id', res.data.id) // 保存用户id
+      this.$router.push('/index')
     }
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+.formBox {
+  width: 80%;
+  position: absolute;
+  left: 50px;
+  bottom: 10px;
+}
+.btns {
+    float:right;
+}
 </style>

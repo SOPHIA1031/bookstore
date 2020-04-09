@@ -4,19 +4,11 @@ import Test from '../components/test.vue'
 import Login from '../components/login.vue'
 import Index from '../components/index.vue'
 import Home from '../components/home.vue'
-import Cultural from '../components/bookCategory/cultural.vue'
-import Art from '../components/bookCategory/art.vue'
-import Child from '../components/bookCategory/child.vue'
-import Education from '../components/bookCategory/education.vue'
-import Live from '../components/bookCategory/live.vue'
-import Novel from '../components/bookCategory/novel.vue'
+import Cate from '../components/bookCategory/Cate.vue'
+import Cate1 from '../components/bookCategory/Cate1.vue'
 import Cart from '../components/shoppingCart.vue'
-import Myorder from '../components/myorder.vue'
 import BookDetail from '../components/bookDetail.vue'
 import MyOrder from '../components/order/myOrder.vue'
-import createOrder from '../components/order/createOrder.vue'
-import Unfinished from '../components/order/unfinished.vue'
-import Finished from '../components/order/finished.vue'
 
 import {
   Breadcrumb,
@@ -46,33 +38,23 @@ const routes = [
     children: [
       { path: '/index', redirect: '/home' },
       { path: '/home', component: Home },
-      { path: '/Category/cultural', component: Cultural },
-      { path: '/Category/art', component: Art },
-      { path: '/Category/child', component: Child },
-      { path: '/Category/education', component: Education },
-      { path: '/Category/live', component: Live },
-      { path: '/Category/novel', component: Novel }
+      { path: '/Category/:categoty_id', component: Cate },
+      { path: '/Category1/:categoty_id', component: Cate1 }
     ]
   },
   { path: '/book/:id', component: BookDetail },
   { path: '/cart', component: Cart },
-  { path: '/:id/order', component: MyOrder },
-  {
-    path: '/myorder',
-    component: Myorder,
-    children: [
-      { path: '/order/unfinished', component: Unfinished },
-      { path: '/order/finished', component: Finished }
-    ]
-  },
-  { path: '/:id/create', component: createOrder }
+  { path: '/myOrder', component: MyOrder }
 
 ]
 
 const router = new VueRouter({
   routes
 })
-
+const VueRouterPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (to) {
+  return VueRouterPush.call(this, to).catch(err => err)
+}
 // 挂载路由导航守卫
 // router.beforeEach((to, from, next) => {
 

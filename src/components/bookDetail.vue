@@ -2,16 +2,16 @@
     <el-container>
         <!-- 导航栏 -->
         <el-header>
-            <el-row>
-                  <el-col :span="6"><div class="logo">网上书城</div></el-col>
-                  <el-col :span="18">
-                      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-                        <el-menu-item index="1" @click="goHome">主页</el-menu-item>
-                        <el-menu-item index="2" @click="goCart">购物车</el-menu-item>
-                        <el-menu-item index="3">我的订单</el-menu-item>
-                      </el-menu>
-                  </el-col>
-           </el-row>
+          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" >
+              <el-menu-item index="1" @click="goHome">主页</el-menu-item>
+              <el-menu-item index="2" @click="goCart">购物车</el-menu-item>
+              <el-menu-item index="3" @click="goOrder">我的订单</el-menu-item>
+              <el-menu-item index="4" @click="goMyInfo">我的信息</el-menu-item>
+              <div class="infoText">
+                  <span style="margin-right:10px;line-height:40px">{{time}},{{username}}</span>
+                  <el-button @click="logout" class="infoBtn">退出</el-button>
+              </div>
+          </el-menu>
         </el-header>
         <el-main>
             <!-- 书籍介绍 -->
@@ -20,15 +20,15 @@
                 <hr>
                 <div class="bookContainer">
                     <div class="bookPic">
-                        <img :src="getImageUrl(book.id)" width="300px">
+                        <img :src="getImageUrl(book.id)" width="250px" height="300px">
                     </div>
                     <div class="bookOther">
                         <p>售价：{{book.price}}</p>
                         <p>作者：{{book.author}}</p>
                         <hr>
-                        <p>页数:{{book.page}}</p>
+                        <p>页数:356</p>
                         <p>出版社:{{book.publisher}}</p>
-                        <p>出版日期:{{book.publish_date}}</p>
+                        <p>出版日期:2008-10</p>
                         <hr>
                         <p>分类：{{book.category}}</p>
                         <p>销售量：{{total}}</p>
@@ -47,13 +47,13 @@
             <div class="authorIntro book">
                 <span style="font-size:26px">作者简介</span>
                 <hr>
-                <p>{{ book.author_intro }}</p>
+                <p>{{ book.author_info }}</p>
             </div>
             <!-- 书的目录 -->
             <div class="book">
                 <span style="font-size:26px">目录</span>
                 <hr>
-                <p>{{ book.catalogue }}</p>
+                <p v-for="cate in book.catalogue" :key="cate">{{ cate }}</p>
             </div>
             <!-- 评论 -->
             <div class="book">
@@ -78,60 +78,48 @@
 export default {
   data () {
     return {
+      activeIndex: '1',
       book: {},
       queryInfo: {
-        query: 0 // 查询参数：不为空的时候代表根据书名查找
+        id: ''
       },
       total: 0, // 书本总数
-      textarea: '' // 评价
+      textarea: '', // 评价
+      imageUrl: ''
     }
   },
   methods: {
     // 根据路径中的id获取对应书本的其他数据
     async getBook () {
       var bookid = this.$route.params.id
-      // axios.get('api/book').then(response => {
-      //   if (response.data) {
-      //     this.book = response.data[bookId - 1]
-      //   }
-      // })
-      this.queryInfo.query = bookid
-      const { data: res } = await this.$http.get('books', { params: this.queryInfo })
+      this.queryInfo.id = bookid
+      const { data: res } = await this.$http.get('books/one/?', { params: this.queryInfo })
       if (res.meta.status === 200) {
-        //  this.book = res.data.books[0]
-        this.book = res.data.books[bookid - 1]
-        this.total = res.data.total
+        this.book = res.data
+        console.log(res)
       } else {
         this.$message.err('err!')
         console.log(res)
       }
+      this.imageUrl = res.data.url
+      // console.log(this.imageUrl)
     },
     // 获取书本封面图片
     getImageUrl (id) {
-      return require('../pic/books/' + id + '.jpg')
+      return this.imageUrl
     },
     // 加入购物车
     async cartAdd () {
       // 将对应的商品编号和用户编号发给服务器
-      var userid = window.sessionStorage.getItem('userid')
+      var userid = window.sessionStorage.getItem('id')
       var data = {
-        userid: userid,
-        books: {
-          bookid: this.book.id,
+        user_id: userid,
+        books: [{
+          book_id: this.book.id,
           count: 1
-        }
+        }]
       }
-      // axios.post('/api/addgoods', data).then(response => {
-      //   if (response.data) {
-      //     if (response.data.code === 200) this.$message.success('成功加入购物车')
-      //     // console.log('res=>', response)
-      //     else {
-      //       console.log(response.data.code)
-      //       alert('商品加入购物车出现错误')
-      //     }
-      //   }
-      // })
-      const { data: res } = await this.$http.post('purchase/add', data)
+      const { data: res } = await this.$http.post('orders/add/', data)
       if (res.meta.status === 200) this.$message.success('成功加入购物车')
       else {
         console.log(res)
@@ -142,15 +130,15 @@ export default {
     async commit () {
       var userid = window.sessionStorage.getItem('id')
       var bookid = this.$route.params.id
-      var data = { userid: userid, bookid: bookid, content: this.textarea }
+      var data = { user_id: userid, book_id: bookid, content: this.textarea }
       // 限制评论不为空
       if (this.textarea === '') return this.$message.err('评论不能为空')
       // 发送post请求
-      const { data: res } = await this.$http.post('books/comment', data)
+      const { data: res } = await this.$http.post('books/comment/', data)
       if (res.meta.status === 200) {
         this.$message.success('发表评论成功')
-        console.log(data)
         this.textarea = ''
+        this.getBook()
       } else {
         console.log(res)
         this.$message.err('评论失败')
@@ -160,17 +148,59 @@ export default {
     goHome () {
       this.$router.push('/index')
     },
+    // 返回购物车
     goCart () {
       this.$router.push('/cart')
+    },
+    // 返回订单
+    goOrder () {
+      this.$router.push('/myOrder')
+    },
+    // 返回个人信息
+    goMyInfo () {
+      this.$router.push('/myInfo')
+    },
+    // 获取登录用户的id,保存
+    getInfo () {
+      var name = window.sessionStorage.getItem('username')
+      var id = window.sessionStorage.getItem('id')
+      this.username = name
+      this.userid = id
+    },
+    // 获取时间
+    getTime () {
+      var day = new Date()
+      var hour = day.getHours()
+      if (hour > 6 && hour < 12) this.time = '早上好'
+      else if (hour >= 12 && hour < 18) this.time = '下午好'
+      else this.time = '晚上好'
+    },
+    // 退出登录
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
     }
   },
   created () {
+    this.getInfo()
+    this.getTime()
     this.getBook()
   }
 }
 </script>
 
 <style scoped>
+.el-header {
+  width: 65%;
+  margin: auto;
+  position: relative;
+}
+.infoText {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
 .book {
     width: 60%;
     border: solid 1px #868686d7;
