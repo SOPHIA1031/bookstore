@@ -26,7 +26,7 @@ export default {
     return {
       //    表示一个表单数据绑定对象
       loginForm: {
-        telephone: '12345',
+        telephone: '15927290862',
         password: '123456'
       },
 

@@ -47,6 +47,7 @@ export default {
     // 获取最新上架书籍
     async getBooks () {
       const { data: res } = await this.$http.get('books', { params: this.queryInfo })
+      console.log(res)
       if (res.meta.status !== 200) {
         this.$message.err('获取失败')
         return console.log(res)

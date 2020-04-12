@@ -62,7 +62,7 @@ export default {
         return this.$message.error('获取失败')
       }
       this.booklist = res.data.books
-      // console.log(res)
+      console.log(res)
       for (var i = 0; i < res.data.length; i++) {
         var book = res.data.books[i]
         this.booklist.push(book)
