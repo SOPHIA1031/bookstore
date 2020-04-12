@@ -20,7 +20,7 @@
                 <hr>
                 <div class="bookContainer">
                     <div class="bookPic">
-                        <img :src="getImageUrl(book.id)" width="300px">
+                        <img :src="getImageUrl(book.id)" width="250px" height="300px">
                     </div>
                     <div class="bookOther">
                         <p>售价：{{book.price}}</p>
@@ -84,7 +84,8 @@ export default {
         id: ''
       },
       total: 0, // 书本总数
-      textarea: '' // 评价
+      textarea: '', // 评价
+      imageUrl: ''
     }
   },
   methods: {
@@ -100,10 +101,12 @@ export default {
         this.$message.err('err!')
         console.log(res)
       }
+      this.imageUrl = res.data.url
+      // console.log(this.imageUrl)
     },
     // 获取书本封面图片
     getImageUrl (id) {
-      return require('../pic/books/' + id + '.jpg')
+      return this.imageUrl
     },
     // 加入购物车
     async cartAdd () {

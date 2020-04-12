@@ -40,7 +40,8 @@ export default {
       bookCategory: [],
       queryInfo: {
         query: '' // 查询参数
-      }
+      },
+      imageUrl: []
     }
   },
   methods: {
@@ -57,28 +58,22 @@ export default {
         var book = res.data.books[i]
         this.books.push(book)
       }
+      this.imageUrl = res.data.books
+      console.log(this.imageUrl)
     },
     // 获取图片路径
     getImageUrl (id) {
-      return require('../pic/books/' + id + '.jpg')
+      var Url = this.imageUrl[id - 1].url
+      return Url
     },
     // 跳转到书本详情页
     getBookUrl (id) {
       var url = '/book/' + id
       this.$router.push(url)
     }
-    // async getCate () {
-    //   const { data: res1 } = await this.$http.get('books/getcate')
-    //   if (res1.meta.stats !== 200) {
-    //     this.$message.error('获取失败')
-    //   }
-    //   this.bookCategory = res1.data
-    //   console.log(res1)
-    // }
   },
   created () {
     this.getBooks()
-    // this.getCate()
   }
 }
 </script>

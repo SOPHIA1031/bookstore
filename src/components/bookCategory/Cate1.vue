@@ -3,7 +3,7 @@
         <!-- 导航 -->
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/home' }">主页</el-breadcrumb-item>
-            <el-breadcrumb-item v-model="queryInfo.id">{{ queryInfo.id }}</el-breadcrumb-item>
+            <el-breadcrumb-item v-model="queryInfo.id">{{ category }}</el-breadcrumb-item>
           </el-breadcrumb>
         <!-- 布局 -->
         <el-row >
@@ -19,7 +19,7 @@
             <el-col :span="5" v-for="book in booklist" :key="book.id" :offset="1" >
               <el-card :body-style="{ padding: '0px' }">
                 <!-- <div  v-for="book in booklist" :key="book.id"> -->
-                  <img :src="getImageUrl(book.id)" class="image">
+                  <img :src="getImageUrl(book.id)" class="image" height="250px">
                   <div style="padding: 14px; text-align: center;">
                     <li @click="getBookUrl(book.id)">{{ book.title }}</li>
                     <!-- <div class="bottom clearfix">
@@ -45,7 +45,9 @@ export default {
         query: ''
       },
       booklist: [],
-      total: 0
+      total: 0,
+      category: '',
+      imageUrl: []
     }
   },
   created () {
@@ -62,11 +64,14 @@ export default {
         return this.$message.error('获取失败')
       }
       this.booklist = res.data.books
+      this.category = this.booklist[1].category
       // console.log(res)
       for (var i = 0; i < res.data.length; i++) {
         var book = res.data.books[i]
         this.booklist.push(book)
       }
+      this.imageUrl = res.data.books
+      // console.log(this.imageUrl)
     },
     // 搜索书籍
     async searchBook () {
@@ -88,7 +93,11 @@ export default {
     },
     // 获取图片路径
     getImageUrl (id) {
-      return require('../../pic/books/' + id + '.jpg')
+      for (var i = 0; i < this.imageUrl.length; i++) {
+        var Url
+        if (id === this.imageUrl[i].id) Url = this.imageUrl[i].url
+      }
+      return Url
     }
   }
 }

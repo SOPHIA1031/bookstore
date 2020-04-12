@@ -85,12 +85,12 @@ export default {
     // 获取书籍的分类
     async getCate () {
       const { data: res1 } = await this.$http.get('books/getcate')
-      if (res1.meta.stats !== 200) {
+      if (res1.meta.status !== 200) {
         this.$message.error('获取失败')
         console.log(res1)
       }
       this.bookCategory = res1.data
-      console.log(res1)
+      // console.log(res1)
     },
     getBookCateUrl (Item) {
       if (Item.category_id % 2 === 0) {
