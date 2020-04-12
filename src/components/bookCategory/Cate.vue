@@ -64,8 +64,6 @@ export default {
         return this.$message.error('获取失败')
       }
       this.booklist = res.data.books
-      this.category = this.booklist[1].category
-      // console.log(this.category)
       for (var i = 0; i < res.data.length; i++) {
         var book = res.data.books[i]
         this.booklist.push(book)
