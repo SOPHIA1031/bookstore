@@ -12,31 +12,6 @@
             </div>
         </el-menu>
         </el-header>
-        <div class="user">
-            <p style="font-size:22px;font-weight:bold">收货人信息</p>
-            <table>
-                <tr>
-                    <td class="first">姓名:</td>
-                    <td>123</td>
-                </tr>
-                <tr>
-                    <td class="first">手机号:</td>
-                    <td>123</td>
-                </tr>
-                <tr>
-                    <td class="first">地区:</td>
-                    <td>123</td>
-                </tr>
-                <tr>
-                    <td class="first">地址:</td>
-                    <td>123</td>
-                </tr>
-                <tr>
-                    <td class="first">邮编:</td>
-                    <td>123</td>
-                </tr>
-            </table>
-        </div>
         <div class="order">
         <el-table
             :data="tableData"

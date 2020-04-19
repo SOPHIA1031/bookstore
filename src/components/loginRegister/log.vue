@@ -26,8 +26,8 @@ export default {
     return {
       //    表示一个表单数据绑定对象
       loginForm: {
-        telephone: '123',
-        password: '123456'
+        telephone: '',
+        password: ''
       },
 
       //    表单的验证规则对象

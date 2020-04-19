@@ -22,7 +22,7 @@
       <el-table-column label="商品图片" width="200">
         <template scope="scope">
           <div style="margin-left: 50px">
-            <img :src="getImg(scope.row.book_id)" style="height: 100px;width: 100px">
+            <img :src="scope.row.url" style="height: 100px;width: 100px">
           </div>
         </template>
       </el-table-column>
@@ -133,9 +133,6 @@ export default {
         this.$message.err('获取购物车列表出错')
         console.log(res)
       }
-    },
-    getImg (id) {
-      return require('../pic/books/' + id + '.jpg')
     },
     // 删除商品
     async handleDelete (index, row) {

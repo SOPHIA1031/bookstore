@@ -20,7 +20,7 @@
                 <hr>
                 <div class="bookContainer">
                     <div class="bookPic">
-                        <img :src="getImageUrl(book.id)" width="250px" height="300px">
+                        <img :src="getImageUrl(book.id)" width="220px" height="300px">
                     </div>
                     <div class="bookOther">
                         <p>售价：{{book.price}}</p>
@@ -102,7 +102,7 @@ export default {
         console.log(res)
       }
       this.imageUrl = res.data.url
-      // console.log(this.imageUrl)
+      console.log(this.imageUrl)
     },
     // 获取书本封面图片
     getImageUrl (id) {
@@ -216,6 +216,7 @@ export default {
 
 .bookOther {
     width: 60%;
+    margin-left: 40px;
 }
 
 .el-button{
