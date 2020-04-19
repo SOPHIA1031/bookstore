@@ -6,7 +6,7 @@
             <el-menu-item index="1" route="Index" >主页</el-menu-item>
             <el-menu-item index="2" route="Cart">购物车</el-menu-item>
             <el-menu-item index="3" route="myOrder">我的订单</el-menu-item>
-            <el-menu-item index="4" route="myOrder">我的信息</el-menu-item>
+            <el-menu-item index="4" route="myInfo">我的信息</el-menu-item>
             <div class="infoText">
                 <span style="margin-right:10px">{{time}},{{username}}</span>
                 <el-button @click="logout" class="infoBtn">退出</el-button>

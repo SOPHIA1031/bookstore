@@ -9,6 +9,7 @@ import Cate1 from '../components/bookCategory/Cate1.vue'
 import Cart from '../components/shoppingCart.vue'
 import BookDetail from '../components/bookDetail.vue'
 import MyOrder from '../components/order/myOrder.vue'
+import MyInfo from '../components/order/myInfo.vue'
 
 import {
   Breadcrumb,
@@ -44,7 +45,8 @@ const routes = [
   },
   { path: '/book/:id', component: BookDetail },
   { path: '/cart', component: Cart },
-  { path: '/myOrder', component: MyOrder }
+  { path: '/myOrder', component: MyOrder },
+  { path: '/myInfo', component: MyInfo }
 
 ]
 
