@@ -1,24 +1,12 @@
-# bookstore
+# 网上书城
+## 实现功能
+  + 用户登录注册
+  + 用户可修改个人密码等信息
+  + 动态生成书本类别的导航侧边栏
+  + 根据书名搜索书
+  + 用户可以对书籍添加评论
+  + 实现购物车以及购买功能
+  + 用户查看历史订单
+## 功能流程图
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+  
